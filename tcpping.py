@@ -7,11 +7,12 @@ import signal
 import sys
 
 class TCPing:
-    def __init__(self, host, port = 80, timeout = 3, count = -1):
+    def __init__(self, host, port = 80, interval = 1, count = 0, timeout = 3):
         self.host = host
         self.port = port
         self.timeout = timeout
-        self.count = count if count else 2^63-1
+        self.count = count
+        self.interval = interval
         self.successful_attempts = 0
         self.failed_attempts = 0
         self.starttime = time.time()
@@ -39,7 +40,10 @@ class TCPing:
         print(f"TCP Ping to {self.host}:{self.port} with timeout {self.timeout*1000} ms:")
         signal.signal(signal.SIGINT, self.signal_handler)
 
-        for attempt in range(1, self.count + 1):
+#        for attempt in range(1, self.count + 1):
+        attempt = 0
+        while True:
+            attempt += 1
             start_time = time.time()
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(self.timeout)
@@ -62,13 +66,15 @@ class TCPing:
             finally:
                 sock.close()
             if attempt != self.count:
-                time.sleep(args.interval)  # Delay between attempts
+                time.sleep(self.interval)  # Delay between attempts
+            else:
+                break
         self.print_summary("All attempts completed")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='TCP Ping Utility')
     parser.add_argument('host', type=str, help='Host[:port] to TCP Ping')
-    parser.add_argument('-c', '--count', type=int, help='Number of attempts (default: infinite)')
+    parser.add_argument('-c', '--count', type=int, default=0, help='Number of attempts (default: infinite)')
     parser.add_argument('-i', '--interval', type=float, default=1, help='Interval in seconds between sending each packet (default: 1)')
     parser.add_argument('-p', '--port', type=int, default=80, help='Port to TCP Ping (default: 80)')
     parser.add_argument('-t', '--timeout', type=float, default=1, help='Timeout in seconds (default: 3)')
@@ -77,7 +83,7 @@ if __name__ == "__main__":
     try:
         if len(args.host.split(':')) > 1:
             args.host, args.port = args.host.split(':')
-        tcping = TCPing(args.host, int(args.port), args.timeout, args.count)
+        tcping = TCPing(args.host, int(args.port), timeout=args.timeout, interval=args.interval, count=args.count)
         tcping.tcping()
     except ValueError:
         print(f"Invalid int value")
