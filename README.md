@@ -86,7 +86,13 @@ or
 
 ## Screenshots
 
-be soon
+### tcpping.py
+
+![tcpping.py real TCP test](screenshots/tcpping.png)
+
+### GTCPPing
+
+![GTCPPing real multi-host TCP test](screenshots/gtcpping.png)
 
 ## License
 
@@ -97,5 +103,3 @@ This project is licensed under the MIT License. See the LICENSE file for more de
 Contributions are welcome! Please submit a pull request or open an issue for any suggestions or improvements.
 
 ---
-
-Feel free to fill in the placeholders with actual screenshot links when you have them ready.
