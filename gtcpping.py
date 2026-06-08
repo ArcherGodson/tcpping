@@ -103,8 +103,11 @@ class TCPingTarget:
 
     @staticmethod
     def short_error(err):
-        if getattr(err, "errno", None) == errno.ECONNREFUSED:
+        err_no = getattr(err, "errno", None)
+        if err_no == errno.ECONNREFUSED:
             return "refused"
+        if err_no in (errno.ENETUNREACH, errno.EHOSTUNREACH):
+            return "unreach"
         if getattr(err, "strerror", None):
             return err.strerror
         return str(err)
