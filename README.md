@@ -26,26 +26,27 @@ cd tcpping
 For a live terminal graph similar to `gping`, use:
 
 ```bash
-./gtcpping [-h] [-c COUNT] [-i INTERVAL] [-p PORT] [-t TIMEOUT] host[:port] [host[:port] ...]
+./gtcpping.py [-h] [-c COUNT] [-i INTERVAL] [-p PORT] [-t TIMEOUT] [-s {ls,host,last,min,avg,max,jtr,loss}] [--descending] host[:port] [host[:port] ...]
 ```
 
-`gtcpping` keeps the same options as `tcpping.py`, draws recent TCP latency
-as a Braille terminal graph, and keeps the TCP ping statistics visible in the
-bottom three lines.
+`gtcpping.py` supports the core `tcpping.py` options, adds multi-target plotting
+and startup table sorting, draws recent TCP latency as a Braille terminal graph,
+shows per-target latency and loss in a sortable table, and keeps aggregate
+statistics visible in the bottom two lines.
 
 Multiple targets can be plotted at once:
 
 ```bash
-./gtcpping example.com:443 github.com:443 -i 0.5
+./gtcpping.py example.com:443 github.com:443 -i 0.5
 ```
 
-When multiple targets are provided, `gtcpping` checks them in parallel so a
+When multiple targets are provided, `gtcpping.py` checks them in parallel so a
 slow or timed out host does not block the others.
 
 The table can be sorted at startup:
 
 ```bash
-./gtcpping example.com:443 github.com:443 --sort loss --descending
+./gtcpping.py example.com:443 github.com:443 --sort loss --descending
 ```
 
 While running, use hotkeys to sort the table: `l` LS, `h` host, `t` last,
